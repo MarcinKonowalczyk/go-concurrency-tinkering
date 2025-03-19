@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go-concurrency-tinkering/utils"
-	"runtime"
 )
 
 
@@ -62,9 +61,6 @@ func main() {
 	// We can use the value from the channel since the FanIn will close the channel
 	// when all the channels are closed
 	fmt.Println("Waiting for goroutine to finish...", <-ch)
-
-	// print the current running goroutines
-	fmt.Println("Current Goroutines:", runtime.NumGoroutine())
 
 	utils.PrintMemStats()
 	fmt.Println("done")
