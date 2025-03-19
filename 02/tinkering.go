@@ -2,16 +2,10 @@ package main
 
 import (
 	"fmt"
+	"go-concurrency-tinkering/utils"
 	"math/rand/v2"
-	"runtime"
 	"sync"
 )
-
-
-
-func bToMb(b uint64) uint64 {
-	return b / 1024 / 1024
-}
 
 // func isChannelClosed(ch chan int) bool {
 // 	select {
@@ -23,30 +17,6 @@ func bToMb(b uint64) uint64 {
 // 		return false
 // 	}
 // }
-
-func isClosedChannelErr(err interface{}) bool {
-	if err == nil {
-		return false
-	}
-	var str string
-	
-	switch err.(type) {
-	case error:
-		str = err.(error).Error()
-	case string:
-		str = err.(string)
-	default:
-		return false
-	}
-
-	if str == "send on closed channel" {
-		return true
-	}
-	if str == "close of closed channel" {
-		return true
-	}
-	return false
-}
 
 func main() {
 
@@ -62,7 +32,7 @@ func main() {
 			id := rand.Int() % 10000
 			defer func() {
 				if r := recover(); r != nil {
-					if isClosedChannelErr(r) {
+					if utils.IsClosedChannelErr(r) {
 						fmt.Printf("%d: channel already closed\n", id)
 					} else {
 						// some other panic. continue panicking
@@ -90,16 +60,5 @@ func main() {
 	fmt.Println("waiting for all goroutines to finish...")
 	wg.Wait()
 	
-	var m runtime.MemStats
-	runtime.ReadMemStats(&m)
-	fmt.Printf("Alloc = %v MiB", bToMb(m.Alloc))
-	fmt.Printf("\tTotalAlloc = %v MiB", bToMb(m.TotalAlloc))
-	fmt.Printf("\tSys = %v MiB", bToMb(m.Sys))
-	fmt.Printf("\tNumGC = %v\n", m.NumGC)
-	
-	cpuUsage := runtime.NumCPU()
-	fmt.Printf("NumCPU = %v\n", cpuUsage)
-
-	fmt.Println("N Goroutines:", runtime.NumGoroutine())
-	fmt.Println("done")
+	utils.PrintMemStats()
 }
