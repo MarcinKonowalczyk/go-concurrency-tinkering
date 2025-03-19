@@ -50,4 +50,5 @@ func main() {
 	time.Sleep(100 * time.Millisecond)
 	
 	utils.PrintMemStats()
+	fmt.Println("done")
 }

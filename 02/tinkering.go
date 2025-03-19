@@ -73,4 +73,5 @@ func main() {
 	wg.Wait()
 	
 	utils.PrintMemStats()
+	fmt.Println("done")
 }

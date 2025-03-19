@@ -46,5 +46,4 @@ func PrintMemStats() {
 	fmt.Printf("NumCPU = %v\n", cpuUsage)
 
 	fmt.Println("N Goroutines:", runtime.NumGoroutine())
-	fmt.Println("done")
 }
