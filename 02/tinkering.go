@@ -7,16 +7,19 @@ import (
 	"sync"
 )
 
-// func isChannelClosed(ch chan int) bool {
-// 	select {
-// 	case _, ok := <-ch:
-// 		if !ok {
-// 			return true
-// 		}
-// 	default:
-// 		return false
-// 	}
-// }
+// NOTE: This is still bad because there is a race condition between checking if the channel is closed and interacting with it.
+// Also we're mixing senders and receivers in the same goroutine.
+func isChannelClosed(ch chan int) bool {
+	select {
+	case _, ok := <-ch:
+		if !ok {
+			return true
+		}
+	default:
+		return false
+	}
+	return false
+}
 
 func main() {
 
@@ -33,7 +36,7 @@ func main() {
 			defer func() {
 				if r := recover(); r != nil {
 					if utils.IsClosedChannelErr(r) {
-						fmt.Printf("%d: channel already closed\n", id)
+						fmt.Printf("%d: recovering from closed channel\n", id)
 					} else {
 						// some other panic. continue panicking
 						panic(r)
@@ -46,9 +49,18 @@ func main() {
 			}()
 
 			for i := 0; i < N; i++ {
+				// BAD: race condition
+				if isChannelClosed(ch) {
+					fmt.Printf("%d: cannot send channel closed\n", id)
+					break
+				}
 				ch <- i
 			}
-			close(ch)
+
+			if !isChannelClosed(ch) {
+				fmt.Printf("%d: closing channel\n", id)
+				close(ch)
+			}
 		}(10, ch)
 	}
 

@@ -2,6 +2,9 @@
 
 Playground for some go concurrency patterns.
 
+*!NOTE!*: These are not *examples* of good practise. Not all of them anyway. Some are examples of *bad* practise (and i try to indicate where that's the case).
+
+
 Run with:
 
 ```
