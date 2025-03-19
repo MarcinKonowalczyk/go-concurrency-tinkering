@@ -5,17 +5,25 @@ import (
 	"go-concurrency-tinkering/utils"
 )
 
-
 func main() {
 	ch := make(chan int)
 	abort := make(chan struct{})
 	go func (N int, ch chan int, abort chan struct{}) {
-		loop: for i := 0; i < N; i++ {
+		n_send := 0
+		loop: for {
 			select {
-			case ch <- i:
 			case <-abort:
 				break loop
+			case ch <- n_send:
+				n_send++
+				if n_send >= N {
+					break loop
+				}
+			// The default case here should not be used
+			// default:
+			// 	fmt.Println("default")
 			}
+			fmt.Println("loop")
 		}
 		close(ch)
 	}(10, ch, abort)
@@ -25,14 +33,13 @@ func main() {
 		fmt.Println(value)
 		i++
 		if i == 5 {
-			fmt.Println("Aborting...")
+			fmt.Println("Sending abort signal...")
 			close(abort)
-			break
 		}
 	}
 
 	// Wait for the goroutine to finish
-	<-ch
+	fmt.Println("Waiting for goroutine to finish...", <-ch)
 
 	utils.PrintMemStats()
 	fmt.Println("done")
