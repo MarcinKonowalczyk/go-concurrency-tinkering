@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"reflect"
 	"runtime"
 )
 
@@ -46,4 +47,52 @@ func PrintMemStats() {
 	fmt.Printf("NumCPU = %v\n", cpuUsage)
 
 	fmt.Println("N Goroutines:", runtime.NumGoroutine())
+}
+
+
+// Dynamic fan-in: multiple channels to one channel
+func FanIn[T any](in []chan T, out chan T) {
+	// Create a dynamic select statement
+	cases := make([]reflect.SelectCase, 0)
+	for _, c := range in {
+		if c == nil {
+			continue
+		}
+		cases = append(cases, reflect.SelectCase{
+			Dir:  reflect.SelectRecv,
+			Chan: reflect.ValueOf(c),
+		})
+	}
+
+	loop: for {
+		chosen, value, ok := reflect.Select(cases)
+		if !ok {
+			cases = append(cases[:chosen], cases[chosen+1:]...)
+			if len(cases) == 0 {
+				break loop
+			}
+			continue loop
+		}
+		// send the value to the output channel
+		out <- value.Interface().(T)
+	}
+	close(out)
+}
+
+// Dynamic fan-out: one channel to multiple channels
+func FanOut[T any](in chan T, out []chan T) {
+	value, ok := <-in;
+	if !ok {
+		for _, c := range out {
+			// close the channel if it is not nil
+			if c == nil {
+				continue
+			}
+			close(c)
+		}
+		return
+	}
+	for _, c := range out {
+		c <- value
+	}	
 }

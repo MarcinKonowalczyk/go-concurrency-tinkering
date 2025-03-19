@@ -9,14 +9,14 @@ func main() {
 	ch := make(chan int)
 	abort := make(chan struct{})
 	go func (N int, ch chan int, abort chan struct{}) {
-		n_send := 0
+		n := 0 // number of values sent
 		loop: for {
 			select {
 			case <-abort:
 				break loop
-			case ch <- n_send:
-				n_send++
-				if n_send >= N {
+			case ch <- n:
+				n++
+				if n >= N {
 					break loop
 				}
 			// The default case here should not be used
