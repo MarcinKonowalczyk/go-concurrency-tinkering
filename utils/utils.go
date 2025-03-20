@@ -15,12 +15,12 @@ func IsClosedChannelErr(err interface{}) bool {
 		return false
 	}
 	var str string
-	
-	switch err.(type) {
+
+	switch err := err.(type) {
 	case error:
-		str = err.(error).Error()
+		str = err.Error()
 	case string:
-		str = err.(string)
+		str = err
 	default:
 		return false
 	}
