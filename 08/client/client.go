@@ -12,10 +12,12 @@ func main() {
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 100*time.Millisecond)
 	defer cancel()
+
+	// utils.PrintMemStats()
 	
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:8080", nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(req.Context(), err)
 	}
 	req = req.WithContext(ctx)
 	
