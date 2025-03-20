@@ -12,8 +12,6 @@ func main() {
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 100*time.Millisecond)
 	defer cancel()
-
-	// utils.PrintMemStats()
 	
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:8080", nil)
 	if err != nil {
@@ -39,6 +37,4 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println(string(body))
-	
-
 }

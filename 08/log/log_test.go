@@ -40,10 +40,11 @@ func TestPrintlnNoID(t *testing.T) {
 	assertLogOutput(t, buf, expected)
 }
 
+type idKey struct{}
 
 func TestPrintlnInt(t *testing.T) {
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, "id", 1)
+	ctx = context.WithValue(ctx, idKey{}, 1)
 
 	// Create a buffer to capture log output
 	buf, cleanup := captureLogOutput()
@@ -68,7 +69,7 @@ func TestPrintlnID(t *testing.T) {
 	my_id := MyID{ value: 1 }
 
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, "id", my_id)
+	ctx = context.WithValue(ctx, idKey{}, my_id)
 
 	buf, cleanup := captureLogOutput()
 	defer cleanup()
