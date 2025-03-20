@@ -78,8 +78,12 @@ func toInt64(value any) (int64, bool) {
 	}
 }
 
+type idKey int
+const idKeyID = idKey(0)
+
+
 func idFromContext(ctx context.Context) (ID[int64], bool) {
-	value := ctx.Value("id")
+	value := ctx.Value(idKeyID)
 	if value == nil {
 		// no value
 		return nil, false
@@ -113,7 +117,7 @@ func Decorate(f http.HandlerFunc) http.HandlerFunc {
 		// Add request ID to the context
 		ctx := r.Context()
 		id := rand.Int63() % 1000000
-		ctx = context.WithValue(ctx, "id", id)
+		ctx = context.WithValue(ctx, idKeyID, id)
 		f(w, r.WithContext(ctx))
 	}
 }
