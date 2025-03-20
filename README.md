@@ -13,4 +13,5 @@ go run 01/tinkering.go
 
 ## links
 
+- https://stackoverflow.com/a/19992525
 - https://github.com/lotusirous/go-concurrency-patterns
