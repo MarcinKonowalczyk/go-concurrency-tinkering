@@ -21,3 +21,6 @@ $(1)-race:
 endef
 
 $(foreach element,$(DIRS),$(eval $(call make-directory-target,$(element))))
+
+format:
+	gofmt -w .

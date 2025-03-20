@@ -15,14 +15,15 @@ func newLimiter(N int, interval time.Duration) (lim limiter) {
 	lim = limiter{
 		limiter: make(chan time.Time, N),
 		stop:    make(chan struct{}),
-	};
+	}
 
 	for range cap(lim.limiter) {
 		lim.limiter <- time.Now()
 	}
-	
+
 	go func(lim limiter) {
-		loop: for {
+	loop:
+		for {
 			select {
 			case <-lim.stop:
 				fmt.Println("stopping ticker")
@@ -34,7 +35,7 @@ func newLimiter(N int, interval time.Duration) (lim limiter) {
 		}
 		close(lim.limiter)
 	}(lim)
-	
+
 	return
 }
 
@@ -60,7 +61,6 @@ func main() {
 			fmt.Println("closing limiter")
 			limiter.close()
 		}()
-		
 
 		for req := range requests {
 			<-limiter.limiter

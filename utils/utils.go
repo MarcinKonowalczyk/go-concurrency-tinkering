@@ -42,13 +42,12 @@ func PrintMemStats() {
 	fmt.Printf("\tTotalAlloc = %v MiB", BToMb(m.TotalAlloc))
 	fmt.Printf("\tSys = %v MiB", BToMb(m.Sys))
 	fmt.Printf("\tNumGC = %v\n", m.NumGC)
-	
+
 	cpuUsage := runtime.NumCPU()
 	fmt.Printf("NumCPU = %v\n", cpuUsage)
 
 	fmt.Println("N Goroutines:", runtime.NumGoroutine())
 }
-
 
 // Dynamic fan-in: multiple channels to one channel
 func FanIn[T any](in []chan T, out chan T) {
@@ -64,7 +63,8 @@ func FanIn[T any](in []chan T, out chan T) {
 		})
 	}
 
-	loop: for {
+loop:
+	for {
 		chosen, value, ok := reflect.Select(cases)
 		if !ok {
 			cases = append(cases[:chosen], cases[chosen+1:]...)
@@ -81,7 +81,7 @@ func FanIn[T any](in []chan T, out chan T) {
 
 // Dynamic fan-out: one channel to multiple channels
 func FanOut[T any](in chan T, out []chan T) {
-	value, ok := <-in;
+	value, ok := <-in
 	if !ok {
 		for _, c := range out {
 			// close the channel if it is not nil
@@ -94,5 +94,5 @@ func FanOut[T any](in chan T, out []chan T) {
 	}
 	for _, c := range out {
 		c <- value
-	}	
+	}
 }

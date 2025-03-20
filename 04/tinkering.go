@@ -5,7 +5,6 @@ import (
 	"go-concurrency-tinkering/utils"
 )
 
-
 func main() {
 	// NOTE: we're making a purposeful mistake here
 	// channels and aborts are length 5, but we only start 2 goroutines
@@ -14,13 +13,14 @@ func main() {
 
 	channels := make([]chan int, N)
 	aborts := make([]chan struct{}, N)
-	
+
 	for i := 0; i < M; i++ {
 		channels[i] = make(chan int)
 		aborts[i] = make(chan struct{})
-		go func (N int, offset int, ch chan int, abort chan struct{}) {
+		go func(N int, offset int, ch chan int, abort chan struct{}) {
 			n := 0 // number of values sent
-			loop: for {
+		loop:
+			for {
 				select {
 				case <-abort:
 					break loop
@@ -41,7 +41,6 @@ func main() {
 
 	abort := make(chan struct{})
 	go utils.FanOut(abort, aborts)
-
 
 	received := make([]int, 0)
 	i := 0

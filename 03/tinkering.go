@@ -8,9 +8,10 @@ import (
 func main() {
 	ch := make(chan int)
 	abort := make(chan struct{})
-	go func (N int, ch chan int, abort chan struct{}) {
+	go func(N int, ch chan int, abort chan struct{}) {
 		n := 0 // number of values sent
-		loop: for {
+	loop:
+		for {
 			select {
 			case <-abort:
 				break loop
@@ -19,9 +20,9 @@ func main() {
 				if n >= N {
 					break loop
 				}
-			// The default case here should not be used
-			// default:
-			// 	fmt.Println("default")
+				// The default case here should not be used
+				// default:
+				// 	fmt.Println("default")
 			}
 			fmt.Println("loop")
 		}

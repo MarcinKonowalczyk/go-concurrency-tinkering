@@ -71,7 +71,7 @@ func main() {
 	// wait for all the goroutines to finish
 	fmt.Println("waiting for all goroutines to finish...")
 	wg.Wait()
-	
+
 	utils.PrintMemStats()
 	fmt.Println("done")
 }

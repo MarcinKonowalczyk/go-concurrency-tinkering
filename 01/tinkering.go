@@ -42,13 +42,12 @@ func main() {
 		fmt.Println(value)
 	}
 
-
 	// wait for all the goroutines to finish
 	// NOTE: again, not a fantastic way of doing this. If we want to guarantee that all goroutines finish, we should use a WaitGroup
 	// but this is just a quick and dirty
 	fmt.Println("waiting for a bit...")
 	time.Sleep(100 * time.Millisecond)
-	
+
 	utils.PrintMemStats()
 	fmt.Println("done")
 }

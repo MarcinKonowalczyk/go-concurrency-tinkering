@@ -19,7 +19,7 @@ func (a *not_atomic_int64) Load() int64 {
 }
 
 func main() {
-	
+
 	var counter not_atomic_int64
 	// var counter atomic.Int64
 
