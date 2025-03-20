@@ -22,5 +22,5 @@ endef
 
 $(foreach element,$(DIRS),$(eval $(call make-directory-target,$(element))))
 
-format:
+fmt:
 	gofmt -w .

@@ -17,12 +17,12 @@ func main() {
 		// fmt.Fprintln(w, "Hello from the Server!")
 
 		select {
-			case <-time.After(2 * time.Second):
-				fmt.Fprintln(w, "Hello from the Server!")
-			case <-ctx.Done():
-				err := ctx.Err()
-				log.Println(ctx, "Request cancelled:", err)
-				http.Error(w, "Request cancelled", http.StatusRequestTimeout)
+		case <-time.After(2 * time.Second):
+			fmt.Fprintln(w, "Hello from the Server!")
+		case <-ctx.Done():
+			err := ctx.Err()
+			log.Println(ctx, "Request cancelled:", err)
+			http.Error(w, "Request cancelled", http.StatusRequestTimeout)
 		}
 
 	}

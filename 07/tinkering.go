@@ -3,13 +3,13 @@ package main
 import "fmt"
 
 type ringBuffer[T any] struct {
-	input  chan T
+	input   chan T
 	Dropped chan T
 }
 
 func newRingBuffer[T any](size int) *ringBuffer[T] {
 	return &ringBuffer[T]{
-		input:  make(chan T, size),
+		input:   make(chan T, size),
 		Dropped: nil,
 	}
 }
@@ -21,9 +21,9 @@ func (rb *ringBuffer[T]) add(item T) {
 		// failed to make space in the buffer, so we need to read from the output channel
 		value := <-rb.input
 		select {
-			// non-blocking send to the dropped channel
-			case rb.Dropped <- value:
-			default:
+		// non-blocking send to the dropped channel
+		case rb.Dropped <- value:
+		default:
 		}
 		rb.input <- item
 	}
@@ -31,7 +31,8 @@ func (rb *ringBuffer[T]) add(item T) {
 
 func (rb *ringBuffer[T]) into_slice() []T {
 	slice := make([]T, 0)
-	loop: for {
+loop:
+	for {
 		select {
 		case item := <-rb.input:
 			slice = append(slice, item)
@@ -77,7 +78,7 @@ func main() {
 	defer rb.close()
 
 	for i := 0; i < 10; i++ {
-		rb.add(i);
+		rb.add(i)
 		fmt.Println(rb.slice())
 		dropped := rb.maybeDropped()
 		if dropped != nil {

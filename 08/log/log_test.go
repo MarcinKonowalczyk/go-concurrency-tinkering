@@ -56,7 +56,7 @@ func TestPrintlnInt(t *testing.T) {
 	assertLogOutput(t, buf, expected)
 }
 
-type MyID struct{
+type MyID struct {
 	value int
 }
 
@@ -64,9 +64,8 @@ func (m MyID) ID() int {
 	return m.value
 }
 
-
 func TestPrintlnID(t *testing.T) {
-	my_id := MyID{ value: 1 }
+	my_id := MyID{value: 1}
 
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, idKey{}, my_id)

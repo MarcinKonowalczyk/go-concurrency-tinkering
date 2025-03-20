@@ -92,7 +92,6 @@ func idFromContext(ctx context.Context) (ID[int64], bool) {
 	return nil, false
 }
 
-
 func Println(ctx context.Context, v ...any) {
 	id, ok := idFromContext(ctx)
 	if ok {
@@ -106,14 +105,14 @@ func Fatal(ctx context.Context, v ...any) {
 	if ok {
 		v = append([]any{fmt.Sprintf("[%d]", id.ID())}, v...)
 	}
-	_log.Fatal(v...)	
+	_log.Fatal(v...)
 }
 
 func Decorate(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Add request ID to the context
-		ctx := r.Context();
-		id := rand.Int63() % 1000000;
+		ctx := r.Context()
+		id := rand.Int63() % 1000000
 		ctx = context.WithValue(ctx, "id", id)
 		f(w, r.WithContext(ctx))
 	}
